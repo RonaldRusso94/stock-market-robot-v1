@@ -1,27 +1,33 @@
 const express = require('express')
-const request = require('request')
+const axios = require('axios')
 
 const app = express()
 
 app.get('/', (req,res) => res.send('API Running'))
 
-app.post('/api/stocks', (req,res,next) => {
+app.get('/api/stocks', (req,res,next) => {
     res.send({
         sucess: true,
         message: 'it works'
     });
-
-
-    const request = require('request');
-    request('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=30min&apikey=53R95KRHZB2DPHRX', function (error, response, body) {
-    console.error('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage.
-
-    const content = JSON.parse(body)
-    console.log(content['Meta Data'])
-    });
+    
+    const test = async () => {
+        try {
+            const {data} =  await axios.get('https://paper-api.alpaca.markets/v2/account');
+            console.log('response', data)
+        } catch (error) {
+            console.log(' error',  error)
+        }
+    }
+    test()
 })
+
+// Define Routes
+app.use('/api/alpaca', require('./routes/api/alpaca'))
+app.use('/api/alphavantage', require('./routes/api/alphavantage'))
+
+
+
 
 const PORT = process.env.PORT || 5000;
 
